@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>YouTube Playlist Length Calculator</title>
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
-    <style>
+    <!-- <style>
         *,
         ::after,
         ::before {
@@ -155,6 +155,171 @@
                 left: 50%;
                 transform: translate(-50%, -50%);
             }
+        }
+
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            height: 60px;
+            background-color: rgb(20, 20, 20);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style> -->
+    <style>
+        *,
+        ::after,
+        ::before {
+            box-sizing: border-box;
+            margin: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(50, 50, 50);
+        }
+
+        nav {
+            background-color: rgb(20, 20, 20);
+            box-shadow: 0px 2px 25px rgba(255, 255, 255, 0.3);
+            padding: 20px 5vw;
+            text-align: center;
+        }
+
+        nav h1 {
+            color: white;
+            font-size: 1.4rem;
+        }
+
+        nav h1 .you {
+            color: white;
+        }
+
+        nav h1 .tube {
+            color: white;
+            background-color: rgb(80, 80, 80);
+            padding: 2px 4px;
+            border-radius: 5px;
+        }
+
+        main {
+            width: 90vw;
+            margin: 100px 5vw;
+            color: white;
+        }
+
+        main .search-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        main .search-form input[type="search"] {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        main .search-form input,
+        main .search-form button {
+            padding: 10px 20px;
+            color: white;
+            background-color: rgb(20, 20, 20);
+            border-radius: 5px;
+            border: 0;
+            height: 40px;
+        }
+
+        main .search-form input:focus,
+        main .search-form button:focus {
+            outline: 2px solid rgb(18, 188, 255);
+        }
+
+        main .search-form input::placeholder {
+            color: white;
+        }
+
+        main .search-form .error-msg {
+            color: #ff6161;
+            text-align: center;
+        }
+
+        main .search-form #adv-form {
+            margin-top: 20px;
+            text-align: center;
+            border: 1px solid white;
+            padding: 10px;
+            position: relative;
+        }
+
+        main .search-form #adv-form h2 {
+            font-size: 1rem;
+        }
+
+        main .search-form #adv-form input[type="number"] {
+            width: 200px;
+            margin-top: 10px;
+        }
+
+        main .search-form #adv-form .close {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 25px;
+            height: 25px;
+            border-radius: 5px;
+            background-color: rgb(20, 20, 20);
+            cursor: pointer;
+        }
+
+        main .search-form #adv-form .close:hover {
+            color: red;
+        }
+
+        main .search-form .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        main .search-form .buttons>* {
+            cursor: pointer;
+        }
+
+        main .search-form .buttons .adv-button {
+            font-size: 0.9rem;
+            color: rgb(18, 188, 255);
+            background-color: transparent;
+            border-radius: 5px;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        main .result {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        main .result div {
+            margin-top: 10px;
+        }
+
+        main svg {
+            display: none;
+            position: absolute;
+            width: 75px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         footer {
