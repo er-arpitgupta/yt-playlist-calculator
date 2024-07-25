@@ -81,6 +81,7 @@
 
                 .error-msg {
                     color: #ff6161;
+                    text-align: center;
                 }
 
                 #adv-form {
@@ -182,7 +183,7 @@
             <input type="search" id="playlistId" placeholder="Enter youtube playlist link" required />
             <div class="error-msg"></div>
             <div id="adv-form" style="display: none">
-                <h2>Enter range of videos in the playlist</h2>
+                <h2>Enter range of videos</h2>
                 <input type="number" name="start" id="start" min="1" max="9999" placeholder="Starting video number"
                     required />
                 <input type="number" name="end" id="end" min="1" max="9999" placeholder="Ending video number"
@@ -217,130 +218,6 @@
     </main>
 
     <footer></footer>
-
-    <!-- <script>
-        var showAdvForm = false;
-        const API_KEY = "AIzaSyA2-nX53GEYS8ZKwC6VCe-t2iFD7_VqUTE";
-
-        function getId(playlistLink) {
-            if (playlistLink?.length) {
-                const pattern = /^([\S]+list=)?([\w_-]+)[\S]*$/;
-                const match = playlistLink.match(pattern);
-                if (match) {
-                    return match[2];
-                } else {
-                    return "";
-                }
-            }
-            return "";
-        }
-
-        async function calculateTotalLength(playlistId, start, end) {
-            let totalDuration = 0;
-            let totalAdvDuration = 0;
-            let totalVideos = 0;
-            let nextPageToken = "";
-            let count = 0;
-
-            do {
-                const response = await fetch(
-                    `https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=9999&playlistId=${playlistId}&key=${API_KEY}&pageToken=${nextPageToken}`
-                );
-                const data = await response.json();
-                const videoIds = data?.items?.map(
-                    (item) => item?.contentDetails?.videoId
-                );
-                const videoDetailsResponse = await fetch(
-                    `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds.join(",")}&key=${API_KEY}`
-                );
-                const videoDetailsData = await videoDetailsResponse.json();
-                videoDetailsData?.items?.forEach((video) => {
-                    const duration = video?.contentDetails?.duration;
-                    if (start <= count && count <= end) {
-                        totalAdvDuration += convertDurationToSeconds(duration);
-                    }
-                    totalDuration += convertDurationToSeconds(duration);
-                    count++;
-                });
-                nextPageToken = data?.nextPageToken;
-                totalVideos += videoIds?.length;
-            } while (nextPageToken);
-            showAdvForm ? displayTotalDuration(totalAdvDuration, end - start + 1) : displayTotalDuration(totalDuration, totalVideos);
-
-        }
-
-        function convertDurationToSeconds(duration) {
-            const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
-            const matches = regex.exec(duration);
-
-            const hours = parseInt(matches[1] || 0);
-            const minutes = parseInt(matches[2] || 0);
-            const seconds = parseInt(matches[3] || 0);
-
-            return hours * 3600 + minutes * 60 + seconds;
-        }
-
-        function displayTotalDuration(totalSeconds, totalVideos) {
-            const hours = Math.floor(totalSeconds / 3600);
-            const minutes = Math.floor((totalSeconds % 3600) / 60);
-            const seconds = (totalSeconds % 3600) % 60;
-
-            document.querySelector('body').style.pointerEvents = 'unset';
-            document.querySelector('svg').style.display = 'none';
-            document.getElementById("result").innerText = `Total Playlist Duration: ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
-            document.getElementById("videos").innerText = `Total Videos: ${totalVideos}`;
-        }
-
-        document.querySelector('input[type="submit"]').addEventListener("click", function () {
-            const playlistId = getId(document.getElementById("playlistId").value);
-            const start = parseInt(document.querySelector("#start").value, 10);
-            const end = parseInt(document.querySelector("#end").value, 10);
-
-            if (playlistId?.length) {
-                if (showAdvForm) {
-                    if (start <= end) {
-                        document.getElementById("result").innerText = '';
-                        document.getElementById("videos").innerText = '';
-                        document.querySelector('body').style.pointerEvents = 'none';
-                        document.querySelector('svg').style.display = 'block';
-
-                        calculateTotalLength(playlistId, start, end);
-                    } else {
-                        document.querySelector('.error-msg').innerText = "Start value should be less than equal to end value";
-                        setTimeout(() => {
-                            document.querySelector('.error-msg').innerText = "";
-                        }, 5000);
-                    }
-                } else {
-                    document.getElementById("result").innerText = '';
-                    document.getElementById("videos").innerText = '';
-                    document.querySelector('body').style.pointerEvents = 'none';
-                    document.querySelector('svg').style.display = 'block';
-
-                    calculateTotalLength(playlistId, 0, 0);
-                }
-            } else {
-                document.querySelector('.error-msg').innerText = "Link field can't be empty";
-                setTimeout(() => {
-                    document.querySelector('.error-msg').innerText = "";
-                }, 5000);
-            }
-        });
-
-        document.querySelector(".adv-button").addEventListener("click", function () {
-            document.querySelector("#adv-form").style.display = "block";
-            document.querySelector(".adv-button").style.display = "none";
-            showAdvForm = true;
-        });
-
-        document.querySelector(".close").addEventListener("click", function () {
-            document.querySelector("#adv-form").style.display = "none";
-            document.querySelector(".adv-button").style.display = "inline-block";
-            showAdvForm = false;
-        });
-
-        document.querySelector("footer").innerText = "Arpit Gupta, " + new Date().getFullYear();
-    </script> -->
 
     <script>
         var showAdvForm = false;
@@ -436,7 +313,7 @@
                         resetDisplay();
                         calculateTotalLength(playlistId, start, end);
                     } else {
-                        displayError("Start value should be less than or equal to end value");
+                        displayError("Start value should be less than or equal to end value and should be greater than 0");
                     }
                 } else {
                     resetDisplay();
