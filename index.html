@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Playlist Length Calculator</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <style>
+        *,
+        ::after,
+        ::before {
+            box-sizing: border-box;
+            margin: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(50, 50, 50);
+        }
+
+        nav {
+            background-color: rgb(20, 20, 20);
+            box-shadow: 0px 2px 25px rgba(255, 255, 255, 0.3);
+            padding: 20px 5vw;
+            text-align: center;
+
+            h1 {
+                color: white;
+                font-size: 1.4rem;
+
+                .you {
+                    color: white;
+                }
+
+                .tube {
+                    color: white;
+                    background-color: rgb(80, 80, 80);
+                    padding: 2px 4px;
+                    border-radius: 5px;
+                }
+            }
+        }
+
+        main {
+            width: 90vw;
+            margin: 100px 5vw;
+            color: white;
+
+            .search-form {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+
+                input[type="search"] {
+                    width: 100%;
+                    max-width: 500px;
+                }
+
+                input,
+                button {
+                    padding: 10px 20px;
+                    color: white;
+                    background-color: rgb(20, 20, 20);
+                    border-radius: 5px;
+                    border: 0;
+                    height: 40px;
+
+                    &:focus {
+                        outline: 2px solid rgb(18, 188, 255);
+                    }
+
+                    &::placeholder {
+                        color: white;
+                    }
+                }
+
+                .error-msg {
+                    color: #ff6161;
+                }
+
+                #adv-form {
+                    margin-top: 20px;
+                    text-align: center;
+                    border: 1px solid white;
+                    padding: 10px;
+                    position: relative;
+
+                    h2 {
+                        font-size: 1rem;
+                    }
+
+                    input[type="number"] {
+                        width: 200px;
+                        margin-top: 10px;
+                    }
+
+                    .close {
+                        position: absolute;
+                        top: -15px;
+                        right: -15px;
+                        width: 25px;
+                        height: 25px;
+                        border-radius: 5px;
+                        background-color: rgb(20, 20, 20);
+                        cursor: pointer;
+
+                        &:hover {
+                            color: red;
+                        }
+                    }
+                }
+
+                .buttons {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 10px;
+                    flex-wrap: wrap;
+
+                    >* {
+                        cursor: pointer;
+                    }
+
+                    .adv-button {
+                        font-size: 0.9rem;
+                        color: rgb(18, 188, 255);
+                        background-color: transparent;
+                        border-radius: 5px;
+                        text-decoration: underline;
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            .result {
+                margin-top: 40px;
+                text-align: center;
+
+                div {
+                    margin-top: 10px;
+                }
+            }
+
+            svg {
+                display: none;
+                position: absolute;
+                width: 75px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            height: 60px;
+            background-color: rgb(20, 20, 20);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <h1>
+            <span class="you">You</span><span class="tube">Tube</span> Playlist Length Calculator
+        </h1>
+    </nav>
+    <main>
+        <div class="search-form">
+            <input type="search" id="playlistId" placeholder="Enter youtube playlist link" required />
+            <div class="error-msg"></div>
+            <div id="adv-form" style="display: none">
+                <h2>Enter range of videos in the playlist</h2>
+                <input type="number" name="start" id="start" min="1" max="9999" placeholder="Starting video number"
+                    required />
+                <input type="number" name="end" id="end" min="1" max="9999" placeholder="Ending video number"
+                    required />
+                <span class="close">&#10005;</span>
+            </div>
+            <div class="buttons">
+                <input type="submit" value="Calculate" />
+                <span class="adv-button">Advanced search</span>
+            </div>
+        </div>
+
+        <div class="result">
+            <div id="videos"></div>
+            <div id="result"></div>
+        </div>
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+            <rect fill="#ffffff" stroke="#ffffff" stroke-width="5" width="30" height="30" x="25" y="50">
+                <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;"
+                    keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4"></animate>
+            </rect>
+            <rect fill="#ffffff" stroke="#ffffff" stroke-width="5" width="30" height="30" x="85" y="50">
+                <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;"
+                    keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2"></animate>
+            </rect>
+            <rect fill="#ffffff" stroke="#ffffff" stroke-width="5" width="30" height="30" x="145" y="50">
+                <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;"
+                    keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0"></animate>
+            </rect>
+        </svg>
+    </main>
+
+    <footer></footer>
+
+    <!-- <script>
+        var showAdvForm = false;
+        const API_KEY = "AIzaSyA2-nX53GEYS8ZKwC6VCe-t2iFD7_VqUTE";
+
+        function getId(playlistLink) {
+            if (playlistLink?.length) {
+                const pattern = /^([\S]+list=)?([\w_-]+)[\S]*$/;
+                const match = playlistLink.match(pattern);
+                if (match) {
+                    return match[2];
+                } else {
+                    return "";
+                }
+            }
+            return "";
+        }
+
+        async function calculateTotalLength(playlistId, start, end) {
+            let totalDuration = 0;
+            let totalAdvDuration = 0;
+            let totalVideos = 0;
+            let nextPageToken = "";
+            let count = 0;
+
+            do {
+                const response = await fetch(
+                    `https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=9999&playlistId=${playlistId}&key=${API_KEY}&pageToken=${nextPageToken}`
+                );
+                const data = await response.json();
+                const videoIds = data?.items?.map(
+                    (item) => item?.contentDetails?.videoId
+                );
+                const videoDetailsResponse = await fetch(
+                    `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds.join(",")}&key=${API_KEY}`
+                );
+                const videoDetailsData = await videoDetailsResponse.json();
+                videoDetailsData?.items?.forEach((video) => {
+                    const duration = video?.contentDetails?.duration;
+                    if (start <= count && count <= end) {
+                        totalAdvDuration += convertDurationToSeconds(duration);
+                    }
+                    totalDuration += convertDurationToSeconds(duration);
+                    count++;
+                });
+                nextPageToken = data?.nextPageToken;
+                totalVideos += videoIds?.length;
+            } while (nextPageToken);
+            showAdvForm ? displayTotalDuration(totalAdvDuration, end - start + 1) : displayTotalDuration(totalDuration, totalVideos);
+
+        }
+
+        function convertDurationToSeconds(duration) {
+            const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+            const matches = regex.exec(duration);
+
+            const hours = parseInt(matches[1] || 0);
+            const minutes = parseInt(matches[2] || 0);
+            const seconds = parseInt(matches[3] || 0);
+
+            return hours * 3600 + minutes * 60 + seconds;
+        }
+
+        function displayTotalDuration(totalSeconds, totalVideos) {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = (totalSeconds % 3600) % 60;
+
+            document.querySelector('body').style.pointerEvents = 'unset';
+            document.querySelector('svg').style.display = 'none';
+            document.getElementById("result").innerText = `Total Playlist Duration: ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+            document.getElementById("videos").innerText = `Total Videos: ${totalVideos}`;
+        }
+
+        document.querySelector('input[type="submit"]').addEventListener("click", function () {
+            const playlistId = getId(document.getElementById("playlistId").value);
+            const start = parseInt(document.querySelector("#start").value, 10);
+            const end = parseInt(document.querySelector("#end").value, 10);
+
+            if (playlistId?.length) {
+                if (showAdvForm) {
+                    if (start <= end) {
+                        document.getElementById("result").innerText = '';
+                        document.getElementById("videos").innerText = '';
+                        document.querySelector('body').style.pointerEvents = 'none';
+                        document.querySelector('svg').style.display = 'block';
+
+                        calculateTotalLength(playlistId, start, end);
+                    } else {
+                        document.querySelector('.error-msg').innerText = "Start value should be less than equal to end value";
+                        setTimeout(() => {
+                            document.querySelector('.error-msg').innerText = "";
+                        }, 5000);
+                    }
+                } else {
+                    document.getElementById("result").innerText = '';
+                    document.getElementById("videos").innerText = '';
+                    document.querySelector('body').style.pointerEvents = 'none';
+                    document.querySelector('svg').style.display = 'block';
+
+                    calculateTotalLength(playlistId, 0, 0);
+                }
+            } else {
+                document.querySelector('.error-msg').innerText = "Link field can't be empty";
+                setTimeout(() => {
+                    document.querySelector('.error-msg').innerText = "";
+                }, 5000);
+            }
+        });
+
+        document.querySelector(".adv-button").addEventListener("click", function () {
+            document.querySelector("#adv-form").style.display = "block";
+            document.querySelector(".adv-button").style.display = "none";
+            showAdvForm = true;
+        });
+
+        document.querySelector(".close").addEventListener("click", function () {
+            document.querySelector("#adv-form").style.display = "none";
+            document.querySelector(".adv-button").style.display = "inline-block";
+            showAdvForm = false;
+        });
+
+        document.querySelector("footer").innerText = "Arpit Gupta, " + new Date().getFullYear();
+    </script> -->
+
+    <script>
+        var showAdvForm = false;
+        const API_KEY = "AIzaSyA2-nX53GEYS8ZKwC6VCe-t2iFD7_VqUTE";
+
+        function getId(playlistLink) {
+            const pattern = /^([\S]+list=)?([\w_-]+)[\S]*$/;
+            const match = playlistLink?.match(pattern);
+            return match ? match[2] : "";
+        }
+
+        async function fetchPlaylistItems(playlistId, nextPageToken = "") {
+            const response = await fetch(
+                `https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=50&playlistId=${playlistId}&key=${API_KEY}&pageToken=${nextPageToken}`
+            );
+            if (!response.ok) {
+                throw new Error("Invalid playlist");
+            }
+            return response.json();
+        }
+
+        async function fetchVideoDetails(videoIds) {
+            const response = await fetch(
+                `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds.join(",")}&key=${API_KEY}`
+            );
+            if (!response.ok) {
+                throw new Error("Invalid video details");
+            }
+            return response.json();
+        }
+
+        async function calculateTotalLength(playlistId, start, end) {
+            let totalDuration = 0;
+            let totalAdvDuration = 0;
+            let totalVideos = 0;
+            let nextPageToken = "";
+            let count = 0;
+
+            try {
+                do {
+                    const data = await fetchPlaylistItems(playlistId, nextPageToken);
+                    const videoIds = data.items.map((item) => item.contentDetails.videoId);
+
+                    if (videoIds.length) {
+                        const videoDetailsData = await fetchVideoDetails(videoIds);
+                        videoDetailsData.items.forEach((video) => {
+                            const duration = convertDurationToSeconds(video.contentDetails.duration);
+                            if (start <= count && count <= end) {
+                                totalAdvDuration += duration;
+                            }
+                            totalDuration += duration;
+                            count++;
+                        });
+                    }
+
+                    nextPageToken = data.nextPageToken;
+                    totalVideos += videoIds.length;
+                } while (nextPageToken);
+
+                displayTotalDuration(showAdvForm ? totalAdvDuration : totalDuration, showAdvForm ? end - start + 1 : totalVideos);
+            } catch (error) {
+                displayError("Error fetching playlist data");
+                document.body.style.pointerEvents = 'unset';
+                document.querySelector('svg').style.display = 'none';
+            }
+        }
+
+        function convertDurationToSeconds(duration) {
+            const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+            const matches = regex.exec(duration);
+            return (parseInt(matches[1] || 0) * 3600) + (parseInt(matches[2] || 0) * 60) + parseInt(matches[3] || 0);
+        }
+
+        function displayTotalDuration(totalSeconds, totalVideos) {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            document.body.style.pointerEvents = 'unset';
+            document.querySelector('svg').style.display = 'none';
+            document.getElementById("result").innerText = `Total Playlist Duration: ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+            document.getElementById("videos").innerText = `Total Videos: ${totalVideos}`;
+        }
+
+        document.querySelector('input[type="submit"]').addEventListener("click", function () {
+            const playlistId = getId(document.getElementById("playlistId").value);
+            const start = parseInt(document.querySelector("#start").value, 10);
+            const end = parseInt(document.querySelector("#end").value, 10);
+
+            if (playlistId?.length) {
+                if (showAdvForm) {
+                    if (start > 0 && end > 0 && start <= end) {
+                        resetDisplay();
+                        calculateTotalLength(playlistId, start, end);
+                    } else {
+                        displayError("Start value should be less than or equal to end value");
+                    }
+                } else {
+                    resetDisplay();
+                    calculateTotalLength(playlistId, 0, 0);
+                }
+            } else {
+                displayError("Link field can't be empty");
+            }
+        });
+
+        function resetDisplay() {
+            document.getElementById("result").innerText = '';
+            document.getElementById("videos").innerText = '';
+            document.body.style.pointerEvents = 'none';
+            document.querySelector('svg').style.display = 'block';
+        }
+
+        function displayError(message) {
+            const errorMsg = document.querySelector('.error-msg');
+            errorMsg.innerText = message;
+            setTimeout(() => { errorMsg.innerText = "" }, 5000);
+        }
+
+        document.querySelector(".adv-button").addEventListener("click", function () {
+            document.querySelector("#adv-form").style.display = "block";
+            document.querySelector(".adv-button").style.display = "none";
+            showAdvForm = true;
+        });
+
+        document.querySelector(".close").addEventListener("click", function () {
+            document.querySelector("#adv-form").style.display = "none";
+            document.querySelector(".adv-button").style.display = "inline-block";
+            showAdvForm = false;
+        });
+
+        document.querySelector("footer").innerText = "Arpit Gupta, " + new Date().getFullYear();
+    </script>
+</body>
+
+</html>
