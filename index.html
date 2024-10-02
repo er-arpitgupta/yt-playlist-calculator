@@ -308,7 +308,11 @@
                         resetDisplay();
                         calculateTotalLength(playlistId, start, end);
                     } else {
-                        displayError("Start value should be less than or equal to end value and should be greater than 0");
+                        displayError(`<ol style="text-align: left">
+                                        <li>Both input fields are mandatory</li>
+                                        <li>Both fields should be greater than 0</li>
+                                        <li>Start value should be less than or equal to end value</li>
+                                    </ol>`, true);
                     }
                 } else {
                     resetDisplay();
@@ -328,7 +332,7 @@
 
         function displayError(message) {
             const errorMsg = document.querySelector('.error-msg');
-            errorMsg.innerText = message;
+            errorMsg.innerHTML = message;
             setTimeout(() => { errorMsg.innerText = "" }, 5000);
         }
 
