@@ -299,8 +299,8 @@
 
         document.querySelector('input[type="submit"]').addEventListener("click", function () {
             const playlistId = getId(document.getElementById("playlistId").value);
-            const start = parseInt(document.querySelector("#start").value, 10);
-            const end = parseInt(document.querySelector("#end").value, 10);
+            const start = parseInt(document.querySelector("#start").value, 10) - 1;
+            const end = parseInt(document.querySelector("#end").value, 10) - 1;
 
             if (playlistId?.length) {
                 if (showAdvForm) {
