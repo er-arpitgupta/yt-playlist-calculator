@@ -299,14 +299,14 @@
 
         document.querySelector('input[type="submit"]').addEventListener("click", function () {
             const playlistId = getId(document.getElementById("playlistId").value);
-            const start = parseInt(document.querySelector("#start").value, 10) - 1;
-            const end = parseInt(document.querySelector("#end").value, 10) - 1;
+            const start = parseInt(document.querySelector("#start").value, 10);
+            const end = parseInt(document.querySelector("#end").value, 10);
 
             if (playlistId?.length) {
                 if (showAdvForm) {
                     if (start > 0 && end > 0 && start <= end) {
                         resetDisplay();
-                        calculateTotalLength(playlistId, start, end);
+                        calculateTotalLength(playlistId, start - 1, end - 1);
                     } else {
                         displayError(`<ol style="text-align: left">
                                         <li>Both input fields are mandatory</li>
