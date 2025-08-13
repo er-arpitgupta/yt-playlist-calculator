@@ -84,15 +84,23 @@
                         cursor: pointer;
                     }
                 }
+            }
+        }
 
-                >svg {
-                    display: none;
-                    width: 50px;
-                    height: 45px;
-                }
-
+        @keyframes spinLoader {
+            from {
+                transform: rotate(0deg);
             }
 
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .verifying-icon {
+            display: none;
+            animation: spinLoader 2s linear infinite;
+            transform-origin: center;
         }
 
         .adv-form {
@@ -220,11 +228,16 @@
         <form class="search-form">
             <div>
                 <input type="search" id="playlistId" placeholder="Enter youtube playlist link" required />
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 0 24 24" width="24"
-                    focusable="false" aria-hidden="true">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24"
+                    viewBox="0 0 24 24" width="24">
                     <path clip-rule="evenodd"
                         d="M16.296 16.996a8 8 0 11.707-.708l3.909 3.91-.707.707-3.909-3.909zM18 11a7 7 0 00-14 0 7 7 0 1014 0z"
                         fill-rule="evenodd"></path>
+                </svg>
+                <svg class="verifying-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none">
+                    <path fill="#212121"
+                        d="M21 12C21 16.9641 16.9641 21 12 21C7.03594 21 3 16.9641 3 12C3 8.04844 5.6434 4.49766 9.43008 3.37266C10.0256 3.19522 10.6518 3.53582 10.8286 4.13027C11.0066 4.72582 10.6671 5.35195 10.0717 5.52949C7.23281 6.37394 5.25 9.03633 5.25 12C5.25 15.723 8.27801 18.75 12 18.75C15.722 18.75 18.75 15.722 18.75 12C18.75 9.03492 16.7679 6.375 13.9301 5.53125C13.3345 5.35382 12.9953 4.72758 13.1732 4.13203C13.35 3.53754 13.9761 3.19828 14.5717 3.37441C18.3562 4.49906 21 8.04844 21 12Z" />
                 </svg>
             </div>
             <div class="adv-form" style="display: none">
@@ -235,20 +248,6 @@
                 <span class="close">&#10005;</span>
             </div>
             <button class="adv-button">Advanced search</button>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-                <rect fill="#000000" stroke="#000000" stroke-width="5" width="30" height="30" x="25" y="50">
-                    <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;"
-                        keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4"></animate>
-                </rect>
-                <rect fill="#000000" stroke="#000000" stroke-width="5" width="30" height="30" x="85" y="50">
-                    <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;"
-                        keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2"></animate>
-                </rect>
-                <rect fill="#000000" stroke="#000000" stroke-width="5" width="30" height="30" x="145" y="50">
-                    <animate attributeName="y" calcMode="spline" dur="2" values="50;120;50;"
-                        keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0"></animate>
-                </rect>
-            </svg>
         </form>
 
         <div class="result">
@@ -315,7 +314,8 @@
             } catch (error) {
                 displayError();
                 document.body.style.pointerEvents = 'unset';
-                document.querySelector('.search-form >svg').style.display = 'none';
+                document.querySelector('.search-icon').style.display = 'block';
+                document.querySelector('.verifying-icon').style.display = 'none';
             }
         }
 
@@ -331,13 +331,13 @@
             const seconds = totalSeconds % 60;
 
             document.body.style.pointerEvents = 'unset';
-            document.querySelector('.search-form >svg').style.display = 'none';
+            document.querySelector('.search-icon').style.display = 'block';
+            document.querySelector('.verifying-icon').style.display = 'none';
             document.getElementById("result").innerText = `Total duration: ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
             document.getElementById("videos").innerText = `No. of videos: ${totalVideos}`;
         }
 
         document.querySelector('.search-form div svg').addEventListener("click", function () {
-            console.log('clicked', showAdvForm);
             const playlistId = getId(document.getElementById("playlistId").value);
             const start = parseInt(document.querySelector("#start").value, 10);
             const end = parseInt(document.querySelector("#end").value, 10);
@@ -363,7 +363,8 @@
             document.getElementById("result").innerText = '';
             document.getElementById("videos").innerText = '';
             document.body.style.pointerEvents = 'none';
-            document.querySelector('.search-form >svg').style.display = 'block';
+            document.querySelector('.search-icon').style.display = 'none';
+            document.querySelector('.verifying-icon').style.display = 'block';
         }
 
         function displayError() {
