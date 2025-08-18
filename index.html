@@ -140,6 +140,21 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+
+            >div {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+
+                .title {
+                    color: #212121;
+                    font-weight: 500;
+                }
+
+                .value {
+                    color: #6b6b6b;
+                }
+            }
         }
 
         footer {
@@ -251,8 +266,6 @@
         </form>
 
         <div class="result">
-            <div id="videos"></div>
-            <div id="result"></div>
         </div>
 
     </main>
@@ -333,8 +346,15 @@
             document.body.style.pointerEvents = 'unset';
             document.querySelector('.search-icon').style.display = 'block';
             document.querySelector('.verifying-icon').style.display = 'none';
-            document.getElementById("result").innerText = `Total duration: ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
-            document.getElementById("videos").innerText = `No. of videos: ${totalVideos}`;
+            document.querySelector('.result').innerHTML =
+                `<div id="videos">
+                    <span class="title">No. of videos</span>
+                    <span class="value">${totalVideos}</span>
+                </div>
+                <div id="result">
+                    <span class="title">Total Duration</span>
+                    <span class="value">${hours} hours, ${minutes} minutes, ${seconds} seconds</span>
+                </div>`;
         }
 
         document.querySelector('.search-form div svg').addEventListener("click", function () {
@@ -360,8 +380,7 @@
         });
 
         function resetDisplay() {
-            document.getElementById("result").innerText = '';
-            document.getElementById("videos").innerText = '';
+            document.querySelector('.result').innerHTML = '';
             document.body.style.pointerEvents = 'none';
             document.querySelector('.search-icon').style.display = 'none';
             document.querySelector('.verifying-icon').style.display = 'block';
